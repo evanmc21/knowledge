@@ -1,5 +1,11 @@
 const express = require('express')
 const path = require('path');
+const mongoose = require('mongoose')
+
+// establish database connection
+mongoose.connect('mongodb://localhost/nodekb')
+let db = mongoose.connection;
+
 // init app
 const app = express();
 
@@ -9,8 +15,29 @@ app.set('view engine', 'pug');
 
 // Home Route
 app.get('/', (req, res) => {
+  let articles = [
+    {
+      id:1,
+      title:'Article One',
+      author: 'Evan Candler',
+      body: 'this is article one'
+    },
+    {
+      id:2,
+      title:'Article One',
+      author: 'Evan Michael',
+      body: 'this is article two'
+    },
+    {
+      id:3,
+      title:'Article One',
+      author: 'Evan Candler',
+      body: 'this is article three'
+    }
+  ];
   res.render('index', {
-    title: 'Articles'
+    title: 'Articles',
+    articles: articles
   });
 });
 
