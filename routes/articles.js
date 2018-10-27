@@ -59,8 +59,12 @@ router.get('/:id', (req, res) => {
 });
 
 // edit single article
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id', verifyAuthenticated, (req, res) => {
   Article.findById(req.params.id, (err, article) => {
+    if(article.author != req.user._id){
+      req.flash('danger', 'Not Authorized');
+      res.render('/');
+    }
     res.render('edit_article', {
       title: 'Edit Article',
       article: article
@@ -89,13 +93,23 @@ router.post('/edit/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+  if(!req.user._id){
+    res.status(500).send();
+  }
+
   let query = {_id:req.params.id}
 
-  Article.remove(query, (err)=> {
-    if(err){
-      console.log(err);
+  Article.findById(req.params.id, (err, article) => {
+    if(article.author != req.user._id){
+      res.status(500).send();
+    } else {
+      Article.remove(query, (err)=> {
+        if(err){
+          console.log(err);
+        }
+        res.send('Success!')
+      });
     }
-    res.send('Success!')
   });
 });
 
