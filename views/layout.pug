@@ -16,7 +16,7 @@ html
           li.nav-item.active
             a.nav-link(href='/')
               | Home 
-              span.sr-only (current)
+        if user 
           li.nav-item
             a.nav-link(href='/articles/add') Add Article
         ul.navbar-nav.navbar-right

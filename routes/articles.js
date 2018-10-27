@@ -4,6 +4,9 @@ const router = express.Router();
 // import Article model
 const Article = require('../models/article');
 
+// import User model
+const User = require('../models/user');
+
 // add route
 router.get('/add', (req, res) => {
   res.render('add_article', {
@@ -12,9 +15,9 @@ router.get('/add', (req, res) => {
 });
 
 // add submit POST route
-router.post('/add', (req, res) => {
+router.post('/add', verifyAuthenticated, (req, res) => {
   req.checkBody('title', 'Title is required').notEmpty();
-  req.checkBody('author', 'Author is required').notEmpty();
+  // req.checkBody('author', 'Author is required').notEmpty();
   req.checkBody('body', 'Body is required').notEmpty();
 
 // get errors
@@ -27,7 +30,7 @@ if(errors){
 } else {
   let article = new Article();
   article.title = req.body.title;
-  article.author = req.body.author;
+  article.author = req.user._id;
   article.body = req.body.body;
 
   article.save((err) => {
@@ -45,8 +48,12 @@ if(errors){
 // get single article
 router.get('/:id', (req, res) => {
   Article.findById(req.params.id, (err, article) => {
-    res.render('article', {
-      article: article
+    // article id gets passed to author id
+    User.findById(article.author, (err, user) => {
+      res.render('article', {
+        article: article,
+        author: user.name
+      });
     });
   });
 });
@@ -91,5 +98,16 @@ router.delete('/:id', (req, res) => {
     res.send('Success!')
   });
 });
+
+// access
+function verifyAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Whoops, please login.');
+    res.redirect('/users/login')
+  }
+}
+
 
 module.exports = router;
