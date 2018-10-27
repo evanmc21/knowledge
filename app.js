@@ -2,6 +2,9 @@ const express = require('express')
 const path = require('path');
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session')
 
 // establish database connection
 mongoose.connect('mongodb://localhost/nodekb')
@@ -30,6 +33,40 @@ app.set('view engine', 'pug');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'public')));
+
+// express session middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+// express messages middleware
+app.use(require('connect-flash')());
+app.use((req, res, next) => {
+  // sets global variable 'messages' to express-messages module
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+})
+
+// express validator middleware
+app.use(expressValidator({
+  errorFormater: (param, msg, value) => {
+    let namespace = param.split('.')
+    , root = namespace.shift()
+    , formParam = root;
+
+    while(namespace.length){
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 
 // Home Route
 app.get('/', (req, res) => {
