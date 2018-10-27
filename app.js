@@ -29,7 +29,7 @@ app.set('view engine', 'pug');
 // middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Home Route
 app.get('/', (req, res) => {
@@ -105,6 +105,17 @@ app.post('/articles/edit/:id', (req, res) => {
     } else {
       res.redirect('/');
     }
+  });
+});
+
+app.delete('/article/:id', (req, res) => {
+  let query = {_id:req.params.id}
+
+  Article.remove(query, (err)=> {
+    if(err){
+      console.log(err);
+    }
+    res.send('Success!')
   });
 });
 
