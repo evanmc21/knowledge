@@ -26,6 +26,9 @@ html
               a.dropdown-item(href='#') Something else here
     .container
       != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
       block content
       br
       hr
