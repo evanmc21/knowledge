@@ -24,7 +24,7 @@ module.exports = (passport) => {
     });
   }));
 
-  passport.serialize((user, done) => {
+  passport.serializeUser((user, done) => {
     done(null, user.id);
   });
 
