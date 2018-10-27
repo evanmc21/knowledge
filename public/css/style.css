@@ -14,3 +14,17 @@ body {
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
+
+input.form-control {
+  background-color: #393D42;
+  color: white;
+}
+
+.btn {
+  background-color: #393D42;
+  border: none;
+}
+
+.btn:hover{
+  opacity: 0.7;
+}

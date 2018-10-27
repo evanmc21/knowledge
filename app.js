@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
@@ -8,28 +7,21 @@ const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
 
-// establish database connection
-mongoose.connect('mongodb://localhost/nodekb')
-let db = mongoose.connection;
-
-// check connection
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
-
-// check for DB errors
-db.on('error', () => {
-  console.log(err);
-});
-
 // init app
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // import models
 let Article = require('./models/article')
 // load view engine
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug');
+
+// connect route files
+let articles = require('./routes/articles');
+let users = require('./routes/users');
+app.use('/articles', articles)
+app.use('/users', users)
 
 // middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -94,13 +86,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// connect route files
-let articles = require('./routes/articles');
-let users = require('./routes/users');
-app.use('/articles', articles)
-app.use('/users', users)
-
 // start server
-app.listen(3000, () => {
-  console.log('Server started on port 3000...')
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
