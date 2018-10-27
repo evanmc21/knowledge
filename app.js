@@ -75,6 +75,10 @@ require('./config/passport')(passport)
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('*', (req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
 // Home Route
 app.get('/', (req, res) => {
   Article.find({}, (err, articles) => {
