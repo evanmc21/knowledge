@@ -1,10 +1,12 @@
 const express = require('express')
 const path = require('path');
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
-const session = require('express-session')
+const session = require('express-session');
+const passport = require('passport');
+const config = require('./config/database');
 
 // establish database connection
 mongoose.connect('mongodb://localhost/nodekb')
@@ -66,6 +68,12 @@ app.use(expressValidator({
     };
   }
 }));
+
+// passport configuration
+require('./config/passport')(passport)
+// passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Home Route
 app.get('/', (req, res) => {
