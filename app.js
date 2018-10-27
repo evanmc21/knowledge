@@ -53,9 +53,7 @@ app.get('/articles/add', (req, res) => {
   });
 });
 
-
 // add submit POST route
-
 app.post('/articles/add', (req, res) => {
   let article = new Article();
   article.title = req.body.title;
@@ -69,6 +67,15 @@ app.post('/articles/add', (req, res) => {
     } else {
       res.redirect('/');
     }
+  });
+});
+
+// get single article
+app.get('/article/:id', (req, res) => {
+  Article.findById(req.params.id, (err, article) => {
+    res.render('article', {
+      article: article
+    });
   });
 });
 
