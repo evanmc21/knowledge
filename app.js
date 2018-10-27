@@ -1,11 +1,28 @@
 const express = require('express')
 const path = require('path');
+const mongoose = require('mongoose');
+const CONNECTION_URI = process.env.MONGODB_URI || 'mongodb://localhost/nodekb';
+
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
+
+// establish database connection
+mongoose.connect(CONNECTION_URI)
+let db = mongoose.connection;
+
+// check connection
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// check for DB errors
+db.on('error', () => {
+  console.log(err);
+});
 
 // init app
 const app = express();
@@ -16,12 +33,6 @@ let Article = require('./models/article')
 // load view engine
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug');
-
-// connect route files
-let articles = require('./routes/articles');
-let users = require('./routes/users');
-app.use('/articles', articles)
-app.use('/users', users)
 
 // middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -86,7 +97,13 @@ app.get('/', (req, res) => {
   });
 });
 
+// connect route files
+let articles = require('./routes/articles');
+let users = require('./routes/users');
+app.use('/articles', articles)
+app.use('/users', users)
+
 // start server
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`Server started on port ${PORT}`)
 });
