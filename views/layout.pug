@@ -25,11 +25,10 @@ html
             li.nav-item
               a.nav-link(href='/users/logout') Logout
           else
-            li.nav-item
+            li.nav-item.dropdown
               a.nav-link(href='/users/signup') Signup
-            li.nav-item
+            li.nav-item.dropdown
               a.nav-link(href='/users/login') Login
-
     .container
       != messages('message', locals)
       if errors

@@ -8,6 +8,24 @@ input.form-control {
   color: white;
 }
 
+textarea.form-control {
+  background-color: #393D42;
+  color: white;
+}
+
+a{
+  color: #393D42
+}
+
+a:hover{
+  color: lightgreen;
+  text-decoration: none;
+}
+
+#a {
+  color: white;
+}
+
 .alert-error{
   color: #a94442;
   background-color: #f2dede;
