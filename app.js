@@ -11,7 +11,6 @@ const passport = require('passport');
 const config = require('./config/database');
 
 // establish database connection
-mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URI)
 let db = mongoose.connection;
 
@@ -42,14 +41,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // express session middleware
 app.use(session({
-    saveUninitialized: true,
-    secret: 'keyboard cat',
-    resave: true,
-    store: new MongoStore({
-      url: 'mongodb://localhost/nodekb',
-      ttl: 14 * 24 * 60 * 60 // = 14 days. Default
-    })
-}));
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 
 // express messages middleware
 app.use(require('connect-flash')());
