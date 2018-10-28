@@ -11,6 +11,7 @@ const passport = require('passport');
 const config = require('./config/database');
 
 // establish database connection
+mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URI)
 let db = mongoose.connection;
 
