@@ -1,13 +1,14 @@
-#Knowledge
+# Knowledge
 
-##Description
+## Description
 A simple blog-type CRUD application that allows a user to create an account and write articles.
 
-##Technologies
+## Technologies
 - Node.js
+- Bootstrap
 - Express
 - Express Messages, Session, Connect Flash & Validation
 - Pug Templating
 - Passport.js Authentication
 - MongoDB & Mongoose
--BCrypt Hashing
+- BCrypt Hashing
