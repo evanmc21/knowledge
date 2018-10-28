@@ -2,11 +2,11 @@ const express = require('express')
 const path = require('path');
 const mongoose = require('mongoose');
 const CONNECTION_URI = process.env.MONGODB_URI || 'mongodb://localhost/nodekb';
-
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const config = require('./config/database');
 
@@ -41,10 +41,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // express session middleware
 app.use(session({
-  secret: 'keyboard cat',
-  resave: true,
-  cookie: { maxAge: 60000 },
-  saveUninitialized: true,
+    saveUninitialized: true,
+    secret: 'keyboard cat',
+    resave: true,
+    store: new MongoStore({
+      url: 'mongodb://localhost/nodekb',
+      ttl: 14 * 24 * 60 * 60 // = 14 days. Default
+    })
 }));
 
 // express messages middleware
