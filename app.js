@@ -9,9 +9,10 @@ const expressValidator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
 const MongoStore = require('connect-mongo')(session);
-
+let options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
+                replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };
 // establish database connection
-mongoose.connect(CONNECTION_URI)
+mongoose.connect(CONNECTION_URI, options)
 let db = mongoose.connection;
 
 // check connection
