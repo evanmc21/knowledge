@@ -1,14 +1,14 @@
 const express = require('express')
 const path = require('path');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const CONNECTION_URI = process.env.MONGODB_URI || 'mongodb://localhost/nodekb';
-const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
-const flash = require('connect-flash');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
-const passport = require('passport');
 const config = require('./config/database');
+const session = require('express-session');
+const expressValidator = require('express-validator');
+const passport = require('passport');
+const flash = require('connect-flash');
+const MongoStore = require('connect-mongo')(session);
 
 // establish database connection
 mongoose.connect(CONNECTION_URI)
@@ -42,12 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 // express session middleware
 app.use(session({
   secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   store: new MongoStore({
     mongooseConnection: mongoose.connection
-  })
-}))
+  }),
+  cookie: { maxAge: 180 * 60 * 1000 }
+}));
+
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 
 // express messages middleware
 app.use(require('connect-flash')());
