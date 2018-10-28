@@ -45,7 +45,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({
-    url: CONNECTION_URI
+    mongooseConnection: mongoose.connection
   })
 }))
 
